@@ -40,7 +40,7 @@ check_acl({Client, PubSub, Topic}, #state{aclquery = AclQuery}) ->
         undefined ->
             ignore;
         Row ->
-            case match(Client, Topic, PubSub, Row) of
+            case match(Client, Topic, topics(PubSub, Row)) of
                 matched -> allow;
                 nomatch -> deny
             end
