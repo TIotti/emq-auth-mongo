@@ -49,7 +49,7 @@ check_acl({Client, PubSub, Topic}, #state{aclquery = AclQuery}) ->
 list_match(_Client, _Topic, _PubSub, []) ->
     nomatch;
 list_match(Client, Topic, PubSub, [First|More]) ->
-    case match(Client, Topic, topics(PubSub, {First})) of
+    case match(Client, Topic, topics(PubSub, First)) of
         matched -> matched;
         nomatch -> list_match(Client, Topic, PubSub, More)
     end.
@@ -66,7 +66,7 @@ topics(publish, Row) ->
     lists:umerge(maps:get(<<"publish">>, Row, []), maps:get(<<"pubsub">>, Row, []));
 
 topics(subscribe, Row) ->
-    lists:umerge(maps:get(<<"subscribe">>, Row, []), maps:get(<<"pubsub">>, Row, [])).
+    lists:umerge(maps:get(<<"publish">>, Row, []), maps:get(<<"pubsub">>, Row, [])).
 
 feedvar(#mqtt_client{client_id = ClientId, username = Username}, Str) ->
     lists:foldl(fun({Var, Val}, Acc) ->
