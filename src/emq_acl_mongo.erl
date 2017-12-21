@@ -36,11 +36,11 @@ check_acl({#mqtt_client{username = <<$$, _/binary>>}, _PubSub, _Topic}, _State) 
 
 check_acl({Client, PubSub, Topic}, #state{aclquery = AclQuery}) ->
     #aclquery{collection = Coll, selector = Selector} = AclQuery,
-    case emq_auth_mongo:query_all(Coll, emq_auth_mongo:replvar(Selector, Client)) of
-        [] ->
+    case emq_auth_mongo:query(Coll, emq_auth_mongo:replvar(Selector, Client)) of
+        undefined ->
             ignore;
-        {ok, Cursor} ->
-            case list_match(Client, Topic, PubSub, mc_cursor:rest(Cursor)) of
+        Row ->
+            case match(Client, Topic, PubSub, Row) of
                 matched -> allow;
                 nomatch -> deny
             end
