@@ -42,7 +42,6 @@ check_acl({Client, PubSub, Topic}, #state{aclquery = AclQuery}) ->
         {ok, Cursor} ->
             Results = mc_cursor:rest(Cursor),
             mc_cursor:close(Cursor),
-            io:fwrite("-> ~p~n", Results),
             case list_match(Client, Topic, PubSub, Results) of
                 matched -> io:fwrite("matched~n", []), allow;
                 nomatch -> io:fwrite("nomatch~n", []), deny
