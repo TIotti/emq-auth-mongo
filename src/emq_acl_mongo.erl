@@ -40,7 +40,7 @@ check_acl({Client, PubSub, Topic}, #state{aclquery = AclQuery}) ->
         [] ->
             io:fwrite("ignore?~n", []), ignore;
         {ok, Cursor} ->
-            case list_match(Client, Topic, PubSub, mc_cursor:rest(Cursor)) of
+            case list_match(Client, Topic, PubSub, [mc_cursor:next(Cursor)]) of
                 matched -> io:fwrite("matched~n", []), mc_cursor:close(Cursor), allow;
                 nomatch -> io:fwrite("nomatch~n", []), mc_cursor:close(Cursor), deny
             end
