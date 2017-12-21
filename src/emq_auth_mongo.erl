@@ -116,3 +116,4 @@ query(Collection, Selector) ->
 
 query_all(Collection, Selector) ->
     ecpool:with_client(?APP, fun(Conn) -> mongo_api:find(Conn, Collection, Selector, #{}) end).
+
