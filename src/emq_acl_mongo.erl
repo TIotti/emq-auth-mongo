@@ -49,7 +49,7 @@ check_acl({Client, PubSub, Topic}, #state{aclquery = AclQuery}) ->
 list_match(_Client, _Topic, _PubSub, []) ->
     nomatch;
 list_match(Client, Topic, PubSub, [First|More]) ->
-    case match(Client, Topic, topics(PubSub, First)) of
+    case match(Client, Topic, topics(PubSub, {First})) of
         matched -> matched;
         nomatch -> list_match(Client, Topic, PubSub, More)
     end.
