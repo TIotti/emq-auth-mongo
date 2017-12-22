@@ -39,8 +39,9 @@ check_acl({Client, PubSub, Topic}, #state{aclquery = AclQuery}) ->
     case emq_auth_mongo:query_all(Coll, emq_auth_mongo:replvar(Selector, Client)) of
         [] ->
             ignore;
-        {ok, Cursor} ->
-            case list_match(Client, Topic, PubSub, mc_cursor:rest(Cursor)) of
+        {_, Cursor} ->
+            Results = mc_cursor:rest(Cursor),
+            case list_match(Client, Topic, PubSub, Results) of
                 matched -> allow;
                 nomatch -> deny
             end
@@ -66,7 +67,7 @@ topics(publish, Row) ->
     lists:umerge(maps:get(<<"publish">>, Row, []), maps:get(<<"pubsub">>, Row, []));
 
 topics(subscribe, Row) ->
-    lists:umerge(maps:get(<<"publish">>, Row, []), maps:get(<<"pubsub">>, Row, [])).
+    lists:umerge(maps:get(<<"subscribe">>, Row, []), maps:get(<<"pubsub">>, Row, [])).
 
 feedvar(#mqtt_client{client_id = ClientId, username = Username}, Str) ->
     lists:foldl(fun({Var, Val}, Acc) ->
