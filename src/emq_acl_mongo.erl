@@ -39,7 +39,7 @@ check_acl({Client, PubSub, Topic}, #state{aclquery = AclQuery}) ->
     case emq_auth_mongo:query_all(Coll, emq_auth_mongo:replvar(Selector, Client)) of
         [] ->
             ignore;
-        {_, Cursor} ->
+        Cursor ->
             Results = mc_cursor:rest(Cursor),
             case list_match(Client, Topic, PubSub, Results) of
                 matched -> allow;
