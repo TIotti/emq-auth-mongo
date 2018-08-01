@@ -47,8 +47,10 @@ check(Client, Password, #state{authquery = AuthQuery, superquery = SuperQuery}) 
     #authquery{collection = Collection, field = Fields,
                hash = HashType, selector = Selector} = AuthQuery,
     case query(Collection, replvar(Selector, Client)) of
-        undefined -> ignore;
+        undefined ->
+            io:fwrite("=====> ignore!~n", []);
         UserMap ->
+            io:fwrite("=====> Sent password: ~p~n", [Password]),
             Result = case [maps:get(Field, UserMap, undefined) || Field <- Fields] of
                 [undefined] -> {error, password_error};
                 [PassHash] -> check_pass(PassHash, Password, HashType);
